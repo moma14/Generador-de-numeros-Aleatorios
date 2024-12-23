@@ -1,0 +1,28 @@
+body {
+  font-family: Arial, sans-serif;
+  padding: 2rem;
+}
+body form {
+  margin-bottom: 2rem;
+}
+body form label {
+  display: block;
+  margin: 0.5rem 0;
+}
+body form input, body form select {
+  margin-bottom: 1rem;
+  display: block;
+  width: 100%;
+}
+body #results ul {
+  list-style: none;
+  padding: 0;
+}
+body #results ul li {
+  background: #f0f0f0;
+  padding: 0.9rem;
+  margin: 0.5rem 0;
+  border-radius: 5px;
+}
+
+/*# sourceMappingURL=styles.css.map */

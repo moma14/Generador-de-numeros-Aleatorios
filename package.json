@@ -1,0 +1,19 @@
+{
+  "name": "generador-de-numeros-aleatorios",
+  "version": "1.0.0",
+  "description": "Proyecto extraordinario",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "build:sass": "sass --watch public/css/styles.sass:public/css/styles.css",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.2",
+    "pug": "^3.0.3",
+    "sass": "^1.83.0"
+  }
+}

@@ -1,0 +1,54 @@
+doctype html
+html
+  head
+    title Generador de Números Aleatorios
+    link(rel="stylesheet", href="/css/styles.css")
+  body
+    h1 Generador de Números Aleatorios
+
+    //- Distribuciones continuas
+    form#continuous-form(action="#" method="post")
+      label(for="continuous-type") Distribución continua:
+      select#continuous-type(name="type")
+        option(value="uniform") Uniforme
+        option(value="normal") Normal (Gaussiana)
+        option(value="exponential") Exponencial
+        option(value="gamma") Gamma
+        option(value="beta") Beta
+        option(value="log-normal") Log-normal
+        option(value="weibull") Weibull
+        option(value="cauchy") Cauchy
+        option(value="triangular") Triangular
+
+      div#continuous-params
+        label(for="min-uniform") Mínimo:
+        input#min-uniform(type="number" step="0.01")
+        label(for="max-uniform") Máximo:
+        input#max-uniform(type="number" step="0.01")
+        label(for="count-uniform") Cantidad:
+        input#count-uniform(type="number")
+      button(type="submit") Generar
+
+    //- Distribuciones discretas
+    form#discrete-form(action="#" method="post")
+      label(for="discrete-type") Distribución discreta:
+      select#discrete-type(name="type")
+        option(value="binomial") Binomial
+        option(value="bernoulli") Bernoulli
+        option(value="poisson") Poisson
+        option(value="geometric") Geométrica
+        option(value="hypergeometric") Hipergeométrica
+        option(value="multinomial") Multinomial
+
+      div#discrete-params
+        label(for="p-bernoulli") Probabilidad de éxito (p):
+        input#p-bernoulli(type="number" step="0.01" min="0" max="1" placeholder="Ej: 0.7")
+        label(for="count-bernoulli") Cantidad:
+        input#count-bernoulli(type="number" min="1" placeholder="Ej: 10")
+      button(type="submit") Generar
+
+    div#results
+      h2 Resultados
+      ul#results-list
+
+    script(src="/script.js")
