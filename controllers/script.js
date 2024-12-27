@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Cambiar dinámicamente los inputs para distribuciones continuas
     continuousSelect.addEventListener('change', () => {
         const selected = continuousSelect.value;
+        console.log('Distribución seleccionada en continuo:', selected);
 
         if (selected === 'uniform') {
             continuousParams.innerHTML = `
@@ -26,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Cambiar dinámicamente los inputs para distribuciones discretas
     discreteSelect.addEventListener('change', () => {
         const selected = discreteSelect.value;
+        console.log('Distribución seleccionada en discreto:', selected);
 
         if (selected === 'bernoulli') {
             discreteParams.innerHTML = `
@@ -33,6 +35,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 <input id="p-bernoulli" type="number" step="0.01" min="0" max="1" placeholder="Ej: 0.7" />
                 <label for="count-bernoulli">Cantidad:</label>
                 <input id="count-bernoulli" type="number" min="1" placeholder="Ej: 10" />
+            `;
+        } else if (selected === 'binomial') {
+            discreteParams.innerHTML = `
+                <label for="n-binomial">Número de ensayos (n):</label>
+                <input id="n-binomial" type="number" min="1" placeholder="Ej: 10" />
+                <label for="p-binomial">Probabilidad de éxito (p):</label>
+                <input id="p-binomial" type="number" step="0.01" min="0" max="1" placeholder="Ej: 0.5" />
+                <label for="count-binomial">Cantidad:</label>
+                <input id="count-binomial" type="number" min="1" placeholder="Ej: 10" />
             `;
         } else {
             discreteParams.innerHTML = `<p>Próximamente para ${selected}.</p>`;
@@ -79,38 +90,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Manejo del formulario para Bernoulli
+    // Manejo del formulario para Binomial y Bernoulli
     document.getElementById('discrete-form').addEventListener('submit', async (e) => {
         e.preventDefault();
-    
+
         const type = discreteSelect.value;
-        console.log('Tipo de distribución seleccionada:', type);
-    
+
         if (type === 'bernoulli') {
             const p = parseFloat(document.getElementById('p-bernoulli')?.value);
             const count = parseInt(document.getElementById('count-bernoulli')?.value);
-    
-            console.log('Datos enviados al backend:', { type, params: { p, count } });
-    
+
             try {
                 const response = await fetch('/generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ type, params: { p, count } }),
                 });
-    
-                console.log('Respuesta del backend (status):', response.status);
-    
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    console.error('Error del servidor:', errorData.error);
-                    alert(`Error del servidor: ${errorData.error}`);
-                    return;
-                }
-    
+
                 const data = await response.json();
-                console.log('Datos recibidos del backend:', data);
-    
+
                 const resultsList = document.getElementById('results-list');
                 resultsList.innerHTML = data.results
                     .map((num) => `<li>${num}</li>`)
@@ -119,8 +117,44 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Error en la solicitud:', error.message);
                 alert('Ocurrió un error al generar los números. Inténtalo nuevamente.');
             }
+        } else if (type === 'binomial') {
+            const n = parseInt(document.getElementById('n-binomial')?.value);
+            const p = parseFloat(document.getElementById('p-binomial')?.value);
+            const count = parseInt(document.getElementById('count-binomial')?.value);
+
+            console.log('Valores ingresados para Binomial:', { n, p, count });
+
+            if (isNaN(n) || n <= 0 || !Number.isInteger(n)) {
+                alert('Por favor, ingresa un número entero positivo para n (número de ensayos).');
+                return;
+            }
+            if (isNaN(p) || p < 0 || p > 1) {
+                alert('Por favor, ingresa un valor válido para p (probabilidad entre 0 y 1).');
+                return;
+            }
+            if (isNaN(count) || count <= 0 || !Number.isInteger(count)) {
+                alert('Por favor, ingresa un valor entero positivo para la cantidad.');
+                return;
+            }
+
+            try {
+                console.log('Enviando datos al backend para Binomial...');
+                const response = await fetch('/generate/binomial', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ n, p, count }),
+                });
+
+                const data = await response.json();
+
+                const resultsList = document.getElementById('results-list');
+                resultsList.innerHTML = data.results
+                    .map((num) => `<li>${num}</li>`)
+                    .join('');
+            } catch (error) {
+                console.error('Error al generar números:', error.message);
+                alert('Ocurrió un error al generar los números. Inténtalo nuevamente.');
+            }
         }
     });
-    
-    
 });

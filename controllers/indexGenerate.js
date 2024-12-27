@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const generateBernoulli = require('./Discretas.js/Bernoulli'); 
+const generateBernoulli = require('../models/Discretas.js/Bernoulli'); 
 
 // Función para generar Uniforme
 const generateUniform = (min, max, count) => {
