@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const generateBinomial = require('../models/Continuas/Binomial'); // Ajusta la ruta según tu estructura
+const generateBinomial = require('../models/Discretas.js/Binomial'); // Ajusta la ruta según tu estructura
 
 // Ruta para la distribución binomial
 router.post('/binomial', (req, res) => {
