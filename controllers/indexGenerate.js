@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const generateBernoulli = require('../models/Discretas.js/Bernoulli');
-const generateNormal = require('../models/Continuas/Normal'); // Importamos el modelo para la distribución normal
+const generateNormal = require('../models/Continuas/Normal'); 
+const generatePoisson = require('../models/Discretas.js/Poisson');
 
 // Función para generar Uniforme
 const generateUniform = (min, max, count) => {
@@ -70,7 +71,12 @@ router.post('/generate', (req, res) => {
             console.log('Resultados generados (normal):', results);
             return res.json({ results });
 
-        } else {
+        }  else if (normalizedType === 'poisson') {
+            const { lambda, count } = params;
+            const results = generatePoisson(lambda, count);
+            return res.json({ results });
+        }
+        else {
             console.error('Tipo de distribución no soportada:', normalizedType);
             return res.status(400).json({ error: 'Tipo de distribución no soportada.' });
         }

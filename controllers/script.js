@@ -54,6 +54,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 <label for="count-binomial">Cantidad:</label>
                 <input id="count-binomial" type="number" min="1" placeholder="Ej: 10" />
             `;
+        } else if (selected === 'poisson') {
+            discreteParams.innerHTML = `
+                <label for="lambda-poisson">Lambda (λ):</label>
+                <input id="lambda-poisson" type="number" step="0.01" min="0.01" placeholder="Ej: 2.5" />
+                <label for="count-poisson">Cantidad:</label>
+                <input id="count-poisson" type="number" min="1" placeholder="Ej: 10" />
+            `;
         } else {
             discreteParams.innerHTML = `<p>Próximamente para ${selected}.</p>`;
         }
@@ -134,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Manejo del formulario para Binomial y Bernoulli
+    // Manejo del formulario para Bernoulli, Binomial y Poisson
     document.getElementById('discrete-form').addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -166,8 +173,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const p = parseFloat(document.getElementById('p-binomial')?.value);
             const count = parseInt(document.getElementById('count-binomial')?.value);
 
-            console.log('Valores ingresados para Binomial:', { n, p, count });
-
             if (isNaN(n) || n <= 0 || !Number.isInteger(n)) {
                 alert('Por favor, ingresa un número entero positivo para n (número de ensayos).');
                 return;
@@ -182,11 +187,40 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             try {
-                console.log('Enviando datos al backend para Binomial...');
                 const response = await fetch('/generate/binomial', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ n, p, count }),
+                });
+
+                const data = await response.json();
+
+                const resultsList = document.getElementById('results-list');
+                resultsList.innerHTML = data.results
+                    .map((num) => `<li>${num}</li>`)
+                    .join('');
+            } catch (error) {
+                console.error('Error al generar números:', error.message);
+                alert('Ocurrió un error al generar los números. Inténtalo nuevamente.');
+            }
+        } else if (type === 'poisson') {
+            const lambda = parseFloat(document.getElementById('lambda-poisson')?.value);
+            const count = parseInt(document.getElementById('count-poisson')?.value);
+
+            if (isNaN(lambda) || lambda <= 0) {
+                alert('Por favor, ingresa un valor válido para lambda (\u03bb > 0).');
+                return;
+            }
+            if (isNaN(count) || count <= 0 || !Number.isInteger(count)) {
+                alert('Por favor, ingresa un valor entero positivo para la cantidad.');
+                return;
+            }
+
+            try {
+                const response = await fetch('/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type, params: { lambda, count } }),
                 });
 
                 const data = await response.json();
