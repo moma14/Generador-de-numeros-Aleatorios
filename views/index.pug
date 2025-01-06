@@ -7,7 +7,7 @@ html
     h1 Generador de Números Aleatorios
 
     //- Distribuciones continuas
-    form#continuous-form(action="#" method="post")
+    form#continuous-form(action="/continuous" method="post")
       label(for="continuous-type") Distribución continua:
       select#continuous-type(name="type")
         option(value="uniform") Uniforme
@@ -23,7 +23,7 @@ html
       button(type="submit") Generar
 
     //- Distribuciones discretas
-    form#discrete-form(action="#" method="post")
+    form#discrete-form(action="/discrete" method="post")
       label(for="discrete-type") Distribución discreta:
       select#discrete-type(name="type")
         option(value="binomial") Binomial
@@ -39,4 +39,4 @@ html
       h2 Resultados
       ul#results-list
 
-    script(src="/controllers/script.js")
+    script(src="/js/script.js")

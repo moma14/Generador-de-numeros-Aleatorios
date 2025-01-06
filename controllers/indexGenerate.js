@@ -1,89 +1,126 @@
-const express = require('express');
-const router = express.Router();
 const generateBernoulli = require('../models/Discretas.js/Bernoulli');
-const generateNormal = require('../models/Continuas/Normal'); 
+const generateNormal = require('../models/Continuas/Normal');
 const generatePoisson = require('../models/Discretas.js/Poisson');
 
-// Función para generar Uniforme
+// Función auxiliar para generar números aleatorios uniformes
 const generateUniform = (min, max, count) => {
     return Array.from({ length: count }, () => Math.random() * (max - min) + min);
 };
 
-// Ruta principal
-router.get('/', (req, res) => {
+// Renderiza la página principal
+const renderIndex = (req, res) => {
     res.render('index');
-});
+};
 
-router.post('/generate', (req, res) => {
-    console.log('Datos recibidos en el servidor (raw):', JSON.stringify(req.body, null, 2));
+// Maneja las distribuciones continuas
+const handleContinuous = (req, res) => {
+    console.log('Datos recibidos en /continuous:', req.body);
 
     const { type, params } = req.body;
 
-    if (!type) {
-        console.error('El campo "type" no está presente en la solicitud.');
-        return res.status(400).json({ error: 'Falta el tipo de distribución.' });
+    if (!type || !params) {
+        return res.status(400).json({ error: 'Faltan parámetros para la distribución continua.' });
     }
 
-    const normalizedType = type.trim().toLowerCase();
-    console.log('Tipo de distribución normalizado:', normalizedType);
-
-    // Procesar Distribuciones
     try {
-        if (normalizedType === 'uniform') {
-            console.log('Procesando distribución uniforme...');
+        if (type === 'uniform') {
             const { min, max, count } = params;
 
-            if (min >= max || count <= 0 || !Number.isInteger(count)) {
+            if (min >= max || count <= 0 || !Number.isInteger(parseInt(count))) {
                 return res.status(400).json({
-                    error: 'Parámetros inválidos: "min" debe ser menor que "max" y "count" debe ser un entero positivo.',
+                    error: 'Parámetros inválidos para distribución uniforme. Asegúrate de que "min" sea menor que "max" y "count" sea un entero positivo.',
                 });
             }
 
-            const results = generateUniform(min, max, count);
-            console.log('Resultados generados (uniform):', results);
+            const results = generateUniform(parseFloat(min), parseFloat(max), parseInt(count));
             return res.json({ results });
-
-        } else if (normalizedType === 'bernoulli') {
-            console.log('Procesando distribución Bernoulli...');
-            const { p, count } = params;
-
-            if (p < 0 || p > 1 || count <= 0 || !Number.isInteger(count)) {
-                return res.status(400).json({
-                    error: 'Parámetros inválidos: "p" debe estar entre 0 y 1, "count" debe ser un entero positivo.',
-                });
-            }
-
-            const results = generateBernoulli(p, count);
-            console.log('Resultados generados (bernoulli):', results);
-            return res.json({ results });
-
-        } else if (normalizedType === 'normal') {
-            console.log('Procesando distribución Normal...');
+        } else if (type === 'normal') {
             const { mean, stddev, count } = params;
 
-            if (stddev <= 0 || count <= 0 || !Number.isInteger(count)) {
+            if (stddev <= 0 || count <= 0 || !Number.isInteger(parseInt(count))) {
                 return res.status(400).json({
-                    error: 'Parámetros inválidos: "stddev" debe ser positivo y "count" debe ser un entero positivo.',
+                    error: 'Parámetros inválidos para distribución normal. "stddev" debe ser positivo y "count" un entero positivo.',
                 });
             }
 
-            const results = generateNormal(mean, stddev, count);
-            console.log('Resultados generados (normal):', results);
-            return res.json({ results });
+            const results = Array.from({ length: parseInt(count) }, () => {
+                const u = Math.random();
+                const v = Math.random();
+                return parseFloat(mean) + parseFloat(stddev) * Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+            });
 
-        }  else if (normalizedType === 'poisson') {
-            const { lambda, count } = params;
-            const results = generatePoisson(lambda, count);
             return res.json({ results });
-        }
-        else {
-            console.error('Tipo de distribución no soportada:', normalizedType);
-            return res.status(400).json({ error: 'Tipo de distribución no soportada.' });
+        } else {
+            return res.status(400).json({ error: 'Tipo de distribución continua no soportada.' });
         }
     } catch (error) {
-        console.error('Error al procesar la solicitud:', error.message);
-        return res.status(500).json({ error: 'Error interno al generar números.' });
+        console.error('Error al procesar /continuous:', error.message);
+        return res.status(500).json({ error: 'Error interno al procesar la distribución continua.' });
     }
-});
+};
 
-module.exports = router;
+// Maneja las distribuciones discretas
+const handleDiscrete = (req, res) => {
+    console.log('Datos recibidos en /discrete:', req.body);
+
+    const { type, params } = req.body;
+
+    if (!type || !params) {
+        return res.status(400).json({ error: 'Faltan parámetros para la distribución discreta.' });
+    }
+
+    try {
+        if (type === 'binomial') {
+            const { n, p, count } = params;
+
+            if (p < 0 || p > 1 || n <= 0 || count <= 0 || !Number.isInteger(parseInt(n)) || !Number.isInteger(parseInt(count))) {
+                return res.status(400).json({
+                    error: 'Parámetros inválidos para distribución binomial. Asegúrate de que "p" esté entre 0 y 1, y "n" y "count" sean enteros positivos.',
+                });
+            }
+
+            const results = Array.from({ length: parseInt(count) }, () => {
+                let successes = 0;
+                for (let i = 0; i < parseInt(n); i++) {
+                    if (Math.random() < parseFloat(p)) successes++;
+                }
+                return successes;
+            });
+
+            return res.json({ results });
+        } else if (type === 'bernoulli') {
+            const { p, count } = params;
+
+            if (p < 0 || p > 1 || count <= 0 || !Number.isInteger(parseInt(count))) {
+                return res.status(400).json({
+                    error: 'Parámetros inválidos para distribución Bernoulli. Asegúrate de que "p" esté entre 0 y 1, y "count" sea un entero positivo.',
+                });
+            }
+
+            const results = Array.from({ length: parseInt(count) }, () => (Math.random() < parseFloat(p) ? 1 : 0));
+            return res.json({ results });
+        } else if (type === 'poisson') {
+            const { lambda, count } = params;
+
+            if (lambda <= 0 || count <= 0 || !Number.isInteger(parseInt(count))) {
+                return res.status(400).json({
+                    error: 'Parámetros inválidos para distribución Poisson. Asegúrate de que "lambda" sea positivo y "count" sea un entero positivo.',
+                });
+            }
+
+            const results = generatePoisson(parseFloat(lambda), parseInt(count));
+            return res.json({ results });
+        } else {
+            return res.status(400).json({ error: 'Tipo de distribución discreta no soportada.' });
+        }
+    } catch (error) {
+        console.error('Error al procesar /discrete:', error.message);
+        return res.status(500).json({ error: 'Error interno al procesar la distribución discreta.' });
+    }
+};
+
+module.exports = {
+    renderIndex,
+    handleContinuous,
+    handleDiscrete,
+};
