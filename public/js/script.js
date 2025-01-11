@@ -34,6 +34,62 @@ document.addEventListener('DOMContentLoaded', () => {
                 <label for="count-exponential">Cantidad:</label>
                 <input id="count-exponential" name="count" type="number" min="1" required />
             `;
+        } else if (selected === 'gamma') {
+            continuousParams.innerHTML = `
+                <label for="shape-gamma">Forma (α):</label>
+                <input id="shape-gamma" name="shape" type="number" step="0.01" min="0.01" required />
+                <label for="scale-gamma">Escala (β):</label>
+                <input id="scale-gamma" name="scale" type="number" step="0.01" min="0.01" required />
+                <label for="count-gamma">Cantidad:</label>
+                <input id="count-gamma" name="count" type="number" min="1" required />
+            `;
+        } else if (selected === 'beta') {
+            continuousParams.innerHTML = `
+                <label for="alpha-beta">α:</label>
+                <input id="alpha-beta" name="alpha" type="number" step="0.01" min="0.01" required />
+                <label for="beta-beta">β:</label>
+                <input id="beta-beta" name="beta" type="number" step="0.01" min="0.01" required />
+                <label for="count-beta">Cantidad:</label>
+                <input id="count-beta" name="count" type="number" min="1" required />
+            `;
+        } else if (selected === 'log-normal') {
+            continuousParams.innerHTML = `
+                <label for="mean-lognormal">Media logarítmica:</label>
+                <input id="mean-lognormal" name="mean" type="number" step="0.01" required />
+                <label for="stddev-lognormal">Desviación estándar logarítmica:</label>
+                <input id="stddev-lognormal" name="stddev" type="number" step="0.01" min="0" required />
+                <label for="count-lognormal">Cantidad:</label>
+                <input id="count-lognormal" name="count" type="number" min="1" required />
+            `;
+        } else if (selected === 'weibull') {
+            continuousParams.innerHTML = `
+                <label for="shape-weibull">Forma (k):</label>
+                <input id="shape-weibull" name="shape" type="number" step="0.01" min="0.01" required />
+                <label for="scale-weibull">Escala (λ):</label>
+                <input id="scale-weibull" name="scale" type="number" step="0.01" min="0.01" required />
+                <label for="count-weibull">Cantidad:</label>
+                <input id="count-weibull" name="count" type="number" min="1" required />
+            `;
+        } else if (selected === 'cauchy') {
+            continuousParams.innerHTML = `
+                <label for="location-cauchy">Ubicación (x₀):</label>
+                <input id="location-cauchy" name="location" type="number" step="0.01" required />
+                <label for="scale-cauchy">Escala (γ):</label>
+                <input id="scale-cauchy" name="scale" type="number" step="0.01" min="0.01" required />
+                <label for="count-cauchy">Cantidad:</label>
+                <input id="count-cauchy" name="count" type="number" min="1" required />
+            `;
+        } else if (selected === 'triangular') {
+            continuousParams.innerHTML = `
+                <label for="min-triangular">Mínimo:</label>
+                <input id="min-triangular" name="min" type="number" step="0.01" required />
+                <label for="mode-triangular">Moda:</label>
+                <input id="mode-triangular" name="mode" type="number" step="0.01" required />
+                <label for="max-triangular">Máximo:</label>
+                <input id="max-triangular" name="max" type="number" step="0.01" required />
+                <label for="count-triangular">Cantidad:</label>
+                <input id="count-triangular" name="count" type="number" min="1" required />
+            `;
         } else {
             continuousParams.innerHTML = `<p>Distribución seleccionada no soportada.</p>`;
         }
@@ -66,6 +122,33 @@ document.addEventListener('DOMContentLoaded', () => {
                 <label for="count-poisson">Cantidad:</label>
                 <input id="count-poisson" name="count" type="number" min="1" required />
             `;
+        } else if (selected === 'geometric') {
+            discreteParams.innerHTML = `
+                <label for="p-geometric">Probabilidad de éxito (p):</label>
+                <input id="p-geometric" name="p" type="number" step="0.01" min="0" max="1" required />
+                <label for="count-geometric">Cantidad:</label>
+                <input id="count-geometric" name="count" type="number" min="1" required />
+            `;
+        } else if (selected === 'hypergeometric') {
+            discreteParams.innerHTML = `
+                <label for="population-hypergeometric">Tamaño de la población:</label>
+                <input id="population-hypergeometric" name="population" type="number" min="1" required />
+                <label for="successes-hypergeometric">Número de éxitos en la población:</label>
+                <input id="successes-hypergeometric" name="successes" type="number" min="0" required />
+                <label for="samples-hypergeometric">Tamaño de la muestra:</label>
+                <input id="samples-hypergeometric" name="samples" type="number" min="1" required />
+                <label for="count-hypergeometric">Cantidad:</label>
+                <input id="count-hypergeometric" name="count" type="number" min="1" required />
+            `;
+        } else if (selected === 'multinomial') {
+            discreteParams.innerHTML = `
+                <label for="n-multinomial">Número de ensayos (n):</label>
+                <input id="n-multinomial" name="n" type="number" min="1" required />
+                <label for="probs-multinomial">Probabilidades (separadas por comas):</label>
+                <input id="probs-multinomial" name="probs" type="text" placeholder="e.g., 0.2,0.3,0.5" required />
+                <label for="count-multinomial">Cantidad:</label>
+                <input id="count-multinomial" name="count" type="number" min="1" required />
+            `;
         } else {
             discreteParams.innerHTML = `<p>Distribución seleccionada no soportada.</p>`;
         }
@@ -74,82 +157,92 @@ document.addEventListener('DOMContentLoaded', () => {
     // Manejo del formulario para distribuciones continuas
     document.getElementById('continuous-form').addEventListener('submit', async (e) => {
         e.preventDefault();
+    
         const type = continuousSelect.value;
-
-        if (type === 'exponential') {
-            const lambda = parseFloat(document.getElementById('lambda-exponential')?.value);
-            const count = parseInt(document.getElementById('count-exponential')?.value);
-
-            if (!lambda || !count || lambda <= 0 || count <= 0) {
-                alert('Parámetros inválidos para distribución exponencial.');
+        const formData = new FormData(e.target);
+        const params = Object.fromEntries(formData.entries());
+    
+        // Elimina cualquier campo redundante
+        delete params.type;
+    
+        // Valida y convierte parámetros numéricos
+        const numericParams = {};
+        for (const key in params) {
+            const parsedValue = parseFloat(params[key]);
+            if (isNaN(parsedValue)) {
+                console.error(`Error: El parámetro "${key}" tiene un valor inválido: ${params[key]}`);
+                alert(`El parámetro "${key}" debe ser un número.`);
                 return;
             }
-
-            try {
-                const response = await fetch('/exponential', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ lambda, count }),
-                });
-
-                const data = await response.json();
-                if (data.error) {
-                    throw new Error(data.error);
-                }
-
-                resultsList.innerHTML = data.results
-                    .map((num) => `<li>${num.toFixed(2)}</li>`)
-                    .join('');
-            } catch (error) {
-                alert(`Error: ${error.message}`);
+            numericParams[key] = parsedValue;
+        }
+    
+        // Construye el payload
+        const payload = { type, params: numericParams };
+        console.log('Payload enviado:', JSON.stringify(payload, null, 2));
+    
+        try {
+            const response = await fetch('/continuous', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
+    
+            if (!response.ok) {
+                const errorMessage = await response.text();
+                throw new Error(`Error en la respuesta del servidor: ${response.status} - ${errorMessage}`);
             }
-        } else {
-            const params = Object.fromEntries(new FormData(e.target).entries());
-
-            try {
-                const response = await fetch('/continuous', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ type, params }),
-                });
-
-                const data = await response.json();
-                if (data.error) {
-                    throw new Error(data.error);
-                }
-
-                resultsList.innerHTML = data.results
-                    .map((num) => `<li>${num.toFixed(2)}</li>`)
-                    .join('');
-            } catch (error) {
-                alert(`Error: ${error.message}`);
+    
+            const data = await response.json();
+            console.log('Respuesta recibida:', data);
+    
+            if (data.error) {
+                throw new Error(data.error);
             }
+    
+            resultsList.innerHTML = data.results
+                .map((num) => `<li>${num.toFixed(2)}</li>`)
+                .join('');
+        } catch (error) {
+            console.error('Error durante la solicitud:', error);
+            alert(`Error: ${error.message}`);
         }
     });
-
+    
     // Manejo del formulario para distribuciones discretas
     document.getElementById('discrete-form').addEventListener('submit', async (e) => {
         e.preventDefault();
         const type = discreteSelect.value;
-        const params = Object.fromEntries(new FormData(e.target).entries());
-
+    
+        // Recoge los datos del formulario
+        const formData = new FormData(e.target);
+        const params = Object.fromEntries(formData.entries());
+    
+        // Elimina cualquier campo redundante
+        delete params.type;
+    
+        // Convierte los valores de los parámetros a números
+        for (const key in params) {
+            params[key] = isNaN(params[key]) ? params[key] : parseFloat(params[key]);
+        }
+    
         try {
             const response = await fetch('/discrete', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ type, params }),
             });
-
+    
             const data = await response.json();
             if (data.error) {
                 throw new Error(data.error);
             }
-
+    
             resultsList.innerHTML = data.results
                 .map((num) => `<li>${num}</li>`)
                 .join('');
         } catch (error) {
             alert(`Error: ${error.message}`);
         }
-    });
+    });    
 });
