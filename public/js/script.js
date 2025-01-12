@@ -4,6 +4,121 @@ document.addEventListener('DOMContentLoaded', () => {
     const discreteSelect = document.getElementById('discrete-type');
     const discreteParams = document.getElementById('discrete-params');
     const resultsList = document.getElementById('results-list');
+    const chartContainer = document.getElementById('chart-container');
+    const canvas = document.getElementById('distribution-chart');
+    const downloadButton = document.getElementById('download-button'); // Botón de descarga
+    let chart; // Variable para almacenar el gráfico
+
+ // Función para generar un archivo de texto (.txt)
+const generateDownloadableFile = (data, type) => {
+    let content = '';
+
+    // Crear contenido del archivo en formato texto plano
+    content += data.map((value) => `${value}`).join('\n');
+
+    // Crear un Blob con el contenido
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+
+    // Mostrar el botón de descarga
+    downloadButton.style.display = 'block';
+    downloadButton.onclick = () => {
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `resultados_${type}.txt`; // Nombre del archivo con extensión .txt
+        a.click();
+        URL.revokeObjectURL(url); // Liberar memoria después de la descarga
+    };
+};
+
+// Función para renderizar un gráfico con Chart.js
+const renderChart = (data, type) => {
+    // Generar etiquetas e intervalos para histogramas
+    const createHistogramBins = (data, numBins = 10) => {
+        if (data.length === 0) {
+            return { bins: [], labels: [] };
+        }
+
+        const min = Math.min(...data);
+        const max = Math.max(...data);
+        const binWidth = (max - min) / numBins;
+        const bins = Array(numBins).fill(0);
+        const labels = [];
+
+        for (let i = 0; i < numBins; i++) {
+            labels.push(`${(min + i * binWidth).toFixed(2)} - ${(min + (i + 1) * binWidth).toFixed(2)}`);
+        }
+
+        data.forEach((value) => {
+            const binIndex = Math.min(Math.floor((value - min) / binWidth), numBins - 1);
+            bins[binIndex]++;
+        });
+
+        return { bins, labels };
+    };
+
+    // Destruir gráfico previo si existe
+    if (chart) {
+        chart.destroy();
+    }
+
+    // Determinar si es continua o discreta
+    let chartType = type === 'discrete' ? 'bar' : 'bar'; // Mantener barras para ambas por claridad
+    let labels, dataset;
+
+    if (type === 'discrete') {
+        labels = Array.from({ length: data.length }, (_, i) => i + 1);
+        dataset = data;
+    } else {
+        const { bins, labels: binLabels } = createHistogramBins(data, 20); // Aumentar bins para mayor detalle
+        labels = binLabels;
+        dataset = bins;
+    }
+
+    // Crear gráfico
+    chart = new Chart(canvas, {
+        type: chartType,
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: type === 'discrete' ? 'Distribución Discreta' : 'Histograma',
+                    data: dataset,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                },
+            ],
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: type === 'discrete' ? 'Distribución Discreta' : 'Histograma de Frecuencia',
+                },
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: type === 'discrete' ? 'Índice' : 'Intervalos',
+                    },
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Frecuencia',
+                    },
+                    beginAtZero: true,
+                },
+            },
+        },
+    });
+
+    // Mostrar el contenedor del gráfico
+    chartContainer.style.display = 'block';
+};
 
     // Configuración dinámica de inputs para distribuciones continuas
     continuousSelect.addEventListener('change', () => {
@@ -203,6 +318,10 @@ document.addEventListener('DOMContentLoaded', () => {
             resultsList.innerHTML = data.results
                 .map((num) => `<li>${num.toFixed(2)}</li>`)
                 .join('');
+
+                // Renderizar el gráfico con los datos
+            renderChart(data.results);
+            generateDownloadableFile(data.results, type); // Crear archivo para descarga
         } catch (error) {
             console.error('Error durante la solicitud:', error);
             alert(`Error: ${error.message}`);
@@ -241,6 +360,10 @@ document.addEventListener('DOMContentLoaded', () => {
             resultsList.innerHTML = data.results
                 .map((num) => `<li>${num}</li>`)
                 .join('');
+
+                // Renderizar el gráfico con los datos
+        renderChart(data.results, 'discrete');
+        generateDownloadableFile(data.results, type); // Crear archivo para descarga
         } catch (error) {
             alert(`Error: ${error.message}`);
         }

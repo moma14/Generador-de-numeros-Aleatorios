@@ -161,6 +161,7 @@ const handleContinuous = (req, res) => {
 };
 
 // Maneja las distribuciones discretas
+// Maneja las distribuciones discretas
 const handleDiscrete = (req, res) => {
     console.log('Datos recibidos en /discrete:', req.body);
 
@@ -171,6 +172,7 @@ const handleDiscrete = (req, res) => {
     }
 
     try {
+        // Binomial
         if (type === 'binomial') {
             const { n, p, count } = params;
             if (p < 0 || p > 1 || n <= 0 || count <= 0) {
@@ -186,15 +188,19 @@ const handleDiscrete = (req, res) => {
             return res.json({ results });
         }
 
+        // Geometric
         if (type === 'geometric') {
             const { p, count } = params;
             if (p <= 0 || p >= 1 || count <= 0) {
                 return res.status(400).json({ error: 'Parámetros inválidos para distribución geométrica.' });
             }
-            const results = Array.from({ length: parseInt(count) }, () => Math.floor(Math.log(1 - Math.random()) / Math.log(1 - p)));
+            const results = Array.from({ length: parseInt(count) }, () =>
+                Math.floor(Math.log(1 - Math.random()) / Math.log(1 - p))
+            );
             return res.json({ results });
         }
 
+        // Hypergeometric
         if (type === 'hypergeometric') {
             const { population, successes, samples, count } = params;
             if (population <= 0 || successes <= 0 || samples <= 0 || count <= 0 || samples > population) {
@@ -216,11 +222,12 @@ const handleDiscrete = (req, res) => {
             return res.json({ results });
         }
 
+        // Multinomial
         if (type === 'multinomial') {
             const { n, probs, count } = params;
             const probabilities = probs.split(',').map(Number);
             const sum = probabilities.reduce((acc, p) => acc + p, 0);
-            if (sum !== 1 || count <= 0 || probabilities.some(p => p < 0)) {
+            if (sum !== 1 || count <= 0 || probabilities.some((p) => p < 0)) {
                 return res.status(400).json({ error: 'Parámetros inválidos para distribución multinomial.' });
             }
             const results = Array.from({ length: parseInt(count) }, () => {
@@ -236,6 +243,37 @@ const handleDiscrete = (req, res) => {
                     }
                 }
                 return trials;
+            });
+            return res.json({ results });
+        }
+
+        // Bernoulli
+        if (type === 'bernoulli') {
+            const { p, count } = params;
+            if (p < 0 || p > 1 || count <= 0) {
+                return res.status(400).json({ error: 'Parámetros inválidos para distribución Bernoulli.' });
+            }
+            const results = Array.from({ length: parseInt(count) }, () =>
+                Math.random() < parseFloat(p) ? 1 : 0
+            );
+            return res.json({ results });
+        }
+
+        // Poisson
+        if (type === 'poisson') {
+            const { lambda, count } = params;
+            if (lambda <= 0 || count <= 0) {
+                return res.status(400).json({ error: 'Parámetros inválidos para distribución Poisson.' });
+            }
+            const results = Array.from({ length: parseInt(count) }, () => {
+                let L = Math.exp(-lambda);
+                let k = 0;
+                let p = 1;
+                do {
+                    k++;
+                    p *= Math.random();
+                } while (p > L);
+                return k - 1;
             });
             return res.json({ results });
         }
