@@ -1,0 +1,11 @@
+doctype html
+html
+  head
+    title Usuarios
+  body
+    h1 Lista de Usuarios
+    ul
+      each usuario in usuarios
+        li= usuario.nombres
+        li=usuario.telefono
+    a(href="/") Volver al inicio
