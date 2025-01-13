@@ -269,6 +269,49 @@ const renderChart = (data, type) => {
         }
     });
 
+    const sendToAPI = async (type, params, results) => {
+        try {
+            const formData = new FormData();
+    
+            formData.append('distribucion', type);
+            formData.append('parametros', JSON.stringify(params));
+            formData.append('resultados', JSON.stringify(results));
+    
+            // Convertir canvas a Blob y agregar al FormData
+            if (canvas) {
+                const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/jpeg', 0.8));
+                if (blob) {
+                    formData.append('grafica', blob, 'grafico.jpg');
+                    console.log('Gráfica convertida a Blob y agregada al FormData.');
+                } else {
+                    console.warn('El canvas no pudo ser convertido a Blob.');
+                }
+            } else {
+                console.warn('Canvas no disponible, no se enviará el gráfico.');
+            }
+    
+            // Inspeccionar contenido del FormData
+            for (const [key, value] of formData.entries()) {
+                console.log(`${key}:`, value);
+            }
+    
+            const response = await fetch('http://localhost:3002/generador/crear', {
+                method: 'POST',
+                body: formData,
+            });
+    
+            if (!response.ok) {
+                const errorMessage = await response.text();
+                throw new Error(`Error al guardar en la base de datos: ${response.status} - ${errorMessage}`);
+            }
+    
+            console.log('Generación guardada exitosamente en la base de datos.');
+        } catch (error) {
+            console.error('Error al guardar en la base de datos:', error.message);
+            alert(`Error al guardar en la base de datos: ${error.message}`);
+        }
+    };     
+    
     // Manejo del formulario para distribuciones continuas
     document.getElementById('continuous-form').addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -322,6 +365,9 @@ const renderChart = (data, type) => {
                 // Renderizar el gráfico con los datos
             renderChart(data.results);
             generateDownloadableFile(data.results, type); // Crear archivo para descarga
+
+            // Enviar los resultados a la API
+        await sendToAPI(type, numericParams, data.results);
         } catch (error) {
             console.error('Error durante la solicitud:', error);
             alert(`Error: ${error.message}`);
@@ -364,6 +410,9 @@ const renderChart = (data, type) => {
                 // Renderizar el gráfico con los datos
         renderChart(data.results, 'discrete');
         generateDownloadableFile(data.results, type); // Crear archivo para descarga
+
+        // Enviar los resultados a la API
+        await sendToAPI(type, params, data.results);
         } catch (error) {
             alert(`Error: ${error.message}`);
         }
