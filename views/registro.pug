@@ -2,33 +2,34 @@ doctype html
 html
   head
     title Registro de Usuario
-    link(rel="stylesheet" href="/styles.css")
+    link(rel="stylesheet" href="/css/styles.css")
   body
-    .container
-      h1 Registro de Usuario
-      form#registroForm(action="http://localhost:3002/usuarios" method="POST")
-        div
+    .register-body
+      .wrapper
+        form#registroForm(action="http://localhost:3002/usuarios" method="POST")
+          h2 Registro
+          .input-field
             label(for="nombres") Nombres:
             input(type="text" name="nombres" id="nombres" required)
-        div
-            label(for="apellido_paterno") Apellido Paterno:
-            input(type="text" name="apellido_paterno" id="apellido_paterno" required)
-        div
-            label(for="apellido_materno") Apellido Materno:
-            input(type="text" name="apellido_materno" id="apellido_materno")
-        div
-            label(for="telefono") Teléfono:
-            input(type="text" name="telefono" id="telefono" required)
-        div
-            label(for="email") Correo Electrónico:
-            input(type="email" name="email" id="email" required)
-        div
-            label(for="usuario") Nombre de Usuario:
-            input(type="text" name="usuario" id="usuario" required)
-        div
-            label(for="contrasenia") Contraseña:
-            input(type="password" name="contrasenia" id="contrasenia" required)
-        button(type="submit") Registrar
+          .input-field
+              label(for="apellido_paterno") Apellido Paterno:
+              input(type="text" name="apellido_paterno" id="apellido_paterno" required)
+          .input-field
+              label(for="apellido_materno") Apellido Materno:
+              input(type="text" name="apellido_materno" id="apellido_materno")
+          .input-field
+              label(for="telefono") Teléfono:
+              input(type="text" name="telefono" id="telefono" required)
+          .input-field
+              label(for="email") Correo Electrónico:
+              input(type="email" name="email" id="email" required)
+          .input-field
+              label(for="usuario") Nombre de Usuario:
+              input(type="text" name="usuario" id="usuario" required)
+          .input-field
+              label(for="contrasenia") Contraseña:
+              input(type="password" name="contrasenia" id="contrasenia" required)
+          button(type="submit") Registrar
 
       if mensaje
         p.success= mensaje
