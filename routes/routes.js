@@ -22,6 +22,7 @@ router.get('/login', (req, res) => {
     res.render('login');
 });
 
+
 // Ruta para obtener usuarios desde la API
 router.get('/usuarios', async (req, res) => {
     try {
@@ -67,7 +68,7 @@ router.post('/subir-grafico', async (req, res) => {
       req.session.token = response.data.token;
   
       // Redirigir al dashboard u otra vista
-      res.redirect('/dashboard'); // Cambia "/dashboard" por la ruta deseada
+      res.redirect('/'); // Cambia "/dashboard" por la ruta deseada
     } catch (error) {
       console.error('Error al iniciar sesión:', error.message);
   
@@ -77,6 +78,11 @@ router.post('/subir-grafico', async (req, res) => {
       });
     }
   });
+
+  router.get('/registro', (req, res) => {
+    res.render('registro', { mensaje: null, error: null });
+  });
+  
   
 
 // Rutas adicionales
