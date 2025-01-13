@@ -1,0 +1,28 @@
+doctype html
+html
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+    title Login | Generador de Números Aleatorios
+    link(rel='stylesheet' href='/css/styles.css')
+  body
+  .login-body
+    .wrapper
+      form(action='/login' method='post')
+        h2 Login
+        .input-field
+          input(type='text' name='email' required='')
+          label Enter your email
+        .input-field
+          input(type='password' name='password' required='')
+          label Enter your password
+        .forget
+          label(for='remember')
+            input#remember(type='checkbox' name='remember')
+            p Remember me
+          a(href='#') Forgot password?
+        button(type='submit') Log In
+        .register
+          p
+            | Don&apos;t have an account? 
+            a(href='/register') Register

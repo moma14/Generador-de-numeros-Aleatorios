@@ -13,6 +13,12 @@ router.post('/binomial', binomialController);
 // Rutas principales
 router.get('/', indexGenerateController.renderIndex);
 
+router.get('/login', (req, res) => {
+    res.render('login');
+  });
+  
+
+
 router.post('/continuous', handleContinuous);
 router.post('/discrete', handleDiscrete);
 
