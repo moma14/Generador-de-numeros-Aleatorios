@@ -5,7 +5,12 @@ html
     link(rel="stylesheet", href="/css/styles.css")
   body(data-user-id=`${userId || ''}` data-token=`${token || ''}`)
     nav
-      a(href="/login" class="auth-button") Login
+      if userId
+        span Bienvenido, #{userName}!
+        a(href="/logout" class="auth-button") Logout
+      else
+        span Bienvenido a esta aplicación, para guardar tus generaciones, inicia sesión.
+        a(href="/login" class="auth-button") Login
 
     h1 Generador de Números Aleatorios
 

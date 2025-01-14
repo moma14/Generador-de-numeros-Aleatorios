@@ -30,13 +30,28 @@ router.use((req, res, next) => {
 });
 
 // Ruta principal
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   console.log('Datos de la sesión actual:', req.session); // Log para verificar la sesión
 
-  // Renderizar la vista principal pasando los datos de la sesión
+  let userName = null;
+
+  if (req.session.userId) {
+    try {
+      // Solicitar los datos del usuario a la API
+      const response = await axios.get(`${API_URL}/usuarios/${req.session.userId}`, {
+        headers: { Authorization: `Bearer ${req.session.token}` },
+      });
+      userName = response.data.usuario; // Suponiendo que el campo "usuario" contiene el nombre
+    } catch (error) {
+      console.error('Error al obtener los datos del usuario:', error.message);
+    }
+  }
+
+  // Renderizar la vista principal pasando los datos de la sesión y el nombre del usuario
   res.render('index', {
     userId: req.session.userId || null,
     token: req.session.token || null,
+    userName, // Pasar el nombre del usuario a la plantilla
   });
 });
 
