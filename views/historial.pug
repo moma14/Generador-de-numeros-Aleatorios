@@ -1,0 +1,39 @@
+doctype html
+html
+  head
+    title Historial de Generaciones
+    link(rel="stylesheet", href="/css/styles.css")
+  body
+    h1 Historial de Generaciones
+
+    if generaciones.length
+      table
+        thead
+          tr
+            th Fecha y Hora
+            th Distribución
+            th Parámetros
+            th Resultados
+            th Gráfica
+            th Descargar
+        tbody
+          each generacion in generaciones
+            tr
+              td= generacion.fecha_hora
+              td= generacion.distribucion
+              td 
+                pre= JSON.stringify(generacion.parametros || {}, null, 2)
+              td 
+                pre= JSON.stringify(generacion.resultados || {}, null, 2)
+              td
+                if generacion.grafica
+                  img(src=`data:image/png;base64,${generacion.grafica}` alt="Gráfica")
+                else
+                  span No disponible
+              td 
+                if generacion.archivo_descarga
+                  a(href=`/descargar/${generacion.archivo_descarga}`) Descargar
+                else
+                  span No disponible
+    else
+      p No hay generaciones registradas.

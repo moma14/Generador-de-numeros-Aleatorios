@@ -8,6 +8,7 @@ html
       if userId
         span Bienvenido, #{userName}!
         a(href="/logout" class="auth-button") Logout
+        a(href=`/usuario/${userId}` class="auth-button") Historial
       else
         span Bienvenido a esta aplicación, para guardar tus generaciones, inicia sesión.
         a(href="/login" class="auth-button") Login

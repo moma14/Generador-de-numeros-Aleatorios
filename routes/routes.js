@@ -180,6 +180,43 @@ router.post('/subir-grafico', async (req, res) => {
   }
 });
 
+// Ruta para obtener y mostrar el historial de un usuario
+router.get('/usuario/:id_usuario', async (req, res) => {
+  try {
+    const { id_usuario } = req.params;
+
+    // Consultar generaciones del usuario
+    const response = await axios.get(`${API_URL}/generador/usuario/${id_usuario}`);
+    const generaciones = response.data;
+
+    // Renderizar la vista del historial
+    res.render('historial', { generaciones });
+  } catch (error) {
+    console.error('Error al obtener el historial:', error.message);
+    res.status(500).render('error', { message: 'No se pudo obtener el historial del usuario' });
+  }
+});
+
+router.get('/descargar/:archivo', async (req, res) => {
+  const { archivo } = req.params;
+
+  try {
+    // Consultar el archivo desde la base de datos o almacenamiento
+    const query = 'SELECT archivo_descarga FROM generaciones WHERE archivo_descarga = ?';
+    const [result] = await db.query(query, [archivo]);
+
+    if (result.length === 0) {
+      return res.status(404).send('Archivo no encontrado');
+    }
+
+    const filePath = `./uploads/${archivo}`; // Ruta donde guardas tus archivos
+    res.download(filePath);
+  } catch (error) {
+    console.error('Error al descargar archivo:', error.message);
+    res.status(500).send('Error al descargar archivo');
+  }
+});
+
 // Rutas adicionales
 router.post('/continuous', handleContinuous);
 router.post('/discrete', handleDiscrete);

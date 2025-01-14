@@ -59,11 +59,8 @@ const generateDownloadableFile = (data, type) => {
 
 // Función para renderizar un gráfico con Chart.js
 const renderChart = (data, type) => {
-    // Generar etiquetas e intervalos para histogramas
     const createHistogramBins = (data, numBins = 10) => {
-        if (data.length === 0) {
-            return { bins: [], labels: [] };
-        }
+        if (data.length === 0) return { bins: [], labels: [] };
 
         const min = Math.min(...data);
         const max = Math.max(...data);
@@ -83,33 +80,20 @@ const renderChart = (data, type) => {
         return { bins, labels };
     };
 
-    // Destruir gráfico previo si existe
     if (chart) {
         chart.destroy();
     }
 
-    // Determinar si es continua o discreta
-    let chartType = type === 'discrete' ? 'bar' : 'bar'; // Mantener barras para ambas por claridad
-    let labels, dataset;
+    const { bins, labels } = type === 'discrete' ? { bins: data, labels: data.map((_, i) => i + 1) } : createHistogramBins(data);
 
-    if (type === 'discrete') {
-        labels = Array.from({ length: data.length }, (_, i) => i + 1);
-        dataset = data;
-    } else {
-        const { bins, labels: binLabels } = createHistogramBins(data, 20); // Aumentar bins para mayor detalle
-        labels = binLabels;
-        dataset = bins;
-    }
-
-    // Crear gráfico
     chart = new Chart(canvas, {
-        type: chartType,
+        type: 'bar',
         data: {
-            labels: labels,
+            labels,
             datasets: [
                 {
                     label: type === 'discrete' ? 'Distribución Discreta' : 'Histograma',
-                    data: dataset,
+                    data: bins,
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
                     borderColor: 'rgba(75, 192, 192, 1)',
                     borderWidth: 1,
@@ -118,10 +102,9 @@ const renderChart = (data, type) => {
         },
         options: {
             responsive: true,
-            plugins: {
-                title: {
-                    display: true,
-                    text: type === 'discrete' ? 'Distribución Discreta' : 'Histograma de Frecuencia',
+            animation: {
+                onComplete: () => {
+                    console.log('Gráfico renderizado completamente.');
                 },
             },
             scales: {
@@ -142,7 +125,6 @@ const renderChart = (data, type) => {
         },
     });
 
-    // Mostrar el contenedor del gráfico
     chartContainer.style.display = 'block';
 };
 
@@ -298,56 +280,65 @@ const renderChart = (data, type) => {
     const sendToAPI = async (type, params, results) => {
         try {
             const formData = new FormData();
-      
-            // Agregar los datos básicos al FormData
+    
             formData.append('distribucion', type);
             formData.append('parametros', JSON.stringify(params));
             formData.append('resultados', JSON.stringify(results));
-      
-            // Agregar userId si existe
+    
             if (userId) {
                 formData.append('id_usuario', userId);
-                console.log('Se incluyó id_usuario en el FormData:', userId);
             } else {
                 formData.append('id_usuario', null);
-                console.warn('id_usuario no disponible, se envía como null.');
             }
-      
-            // Convertir canvas a Blob y agregar al FormData
+    
             if (canvas) {
-                const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/jpeg', 0.8));
+                console.log('Esperando que el gráfico termine de renderizar...');
+                await new Promise((resolve) => setTimeout(resolve, 500)); // Espera 500 ms
+    
+                console.log('Capturando imagen del canvas...');
+                const dataURL = canvas.toDataURL('image/jpeg', 0.8); // Genera la imagen en formato JPEG
+                const blob = dataURLToBlob(dataURL);
+    
                 if (blob) {
                     formData.append('grafica', blob, 'grafico.jpg');
-                    console.log('Gráfica convertida a Blob y agregada al FormData.');
+                    console.log('Imagen capturada y agregada al FormData.');
                 } else {
-                    console.warn('El canvas no pudo ser convertido a Blob.');
+                    console.warn('No se pudo convertir el canvas en un Blob.');
                 }
             } else {
                 console.warn('Canvas no disponible, no se enviará el gráfico.');
             }
-      
-            // Inspeccionar contenido del FormData
-            for (const [key, value] of formData.entries()) {
-                console.log(`${key}:`, value);
-            }
-      
-            // Enviar los datos a la API
+    
+            console.log('Enviando datos a la API...');
             const response = await fetch('http://localhost:3002/generador/crear', {
                 method: 'POST',
                 body: formData,
             });
-      
+    
             if (!response.ok) {
                 const errorMessage = await response.text();
+                console.error('Error al guardar en la base de datos:', errorMessage);
                 throw new Error(`Error al guardar en la base de datos: ${response.status} - ${errorMessage}`);
             }
-      
+    
             console.log('Generación guardada exitosamente en la base de datos.');
         } catch (error) {
             console.error('Error al guardar en la base de datos:', error.message);
-            alert(`Error al guardar en la base de datos: ${error.message}`);
         }
     };    
+    
+    // Helper: Convertir dataURL a Blob
+    const dataURLToBlob = (dataURL) => {
+        const parts = dataURL.split(',');
+        const mime = parts[0].match(/:(.*?);/)[1];
+        const bstr = atob(parts[1]);
+        let n = bstr.length;
+        const u8arr = new Uint8Array(n);
+        while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new Blob([u8arr], { type: mime });
+    };
     
     // Manejo del formulario para distribuciones continuas
     document.getElementById('continuous-form').addEventListener('submit', async (e) => {
