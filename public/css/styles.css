@@ -4,6 +4,9 @@
   font-family: "Open Sans", sans-serif;
   box-sizing: border-box;
 }
+body{
+  background: grey;
+}
 body form {
   margin-bottom: 2rem;
 }
@@ -26,6 +29,10 @@ body #results ul li {
   padding: 0.9rem;
   margin: 0.5rem 0;
   border-radius: 5px;
+}
+h1{
+  display: flex;
+  justify-content: center;
 }
 /*diseño del index*/
 .container {
@@ -68,6 +75,7 @@ body #results ul li {
 }
 .gradient-cards {
   display: grid;
+  background: grey;
   grid-template-columns: repeat(2, 1fr);
   gap: 32px;
   padding: 30px;
@@ -84,6 +92,7 @@ body #results ul li {
 
 .container-card {
   position: relative;
+  overflow-y: hidden;
   border: 2px solid transparent;
   background: linear-gradient(71deg, #080509, #1a171c, #080509);
   background-clip: padding-box;
