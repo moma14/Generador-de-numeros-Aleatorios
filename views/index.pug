@@ -3,9 +3,9 @@ html
   head
     title Generador de Números Aleatorios
     link(rel="stylesheet", href="/css/styles.css")
-  body
+  body(data-user-id=`${userId || ''}` data-token=`${token || ''}`)
     nav
-      a(href="/login" class="login-button") Login
+      a(href="/login" class="auth-button") Login
 
     h1 Generador de Números Aleatorios
 

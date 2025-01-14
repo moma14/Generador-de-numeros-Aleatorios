@@ -8,7 +8,7 @@ html
   body
     .login-body
       .wrapper
-        form(action="http://localhost:3002/usuarios/login" method="post")
+        form(action="/login" method="post")
           h2 Login
           if error
             p.error #{error} <!-- Muestra el error si existe -->

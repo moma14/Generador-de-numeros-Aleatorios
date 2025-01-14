@@ -8,6 +8,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const canvas = document.getElementById('distribution-chart');
     const downloadButton = document.getElementById('download-button'); // Botón de descarga
     let chart; // Variable para almacenar el gráfico
+    const userId = document.body.dataset.userId || null; // Recuperar el userId desde el atributo data-user-id de body
+    const authButton = document.querySelector('.auth-button');  
+
+    console.log('userId en el cliente:', document.body.dataset.userId);    
+    if (userId && userId !== '') {
+        // Si hay un usuario logueado, mostrar "Logout"
+        authButton.textContent = 'Logout';
+        authButton.href = '/logout'; // Ruta para cerrar sesión
+        authButton.addEventListener('click', async (e) => {
+            e.preventDefault();
+            try {
+                const response = await fetch('/logout', { method: 'POST' });
+                if (response.ok) {
+                    window.location.reload(); // Recargar para regresar al estado de no autenticado
+                } else {
+                    console.error('Error al cerrar sesión');
+                }
+            } catch (error) {
+                console.error('Error al cerrar sesión:', error);
+            }
+        });
+    } else {
+        // Si no hay sesión, mantener "Login"
+        authButton.textContent = 'Login';
+        authButton.href = '/login';
+    }
 
  // Función para generar un archivo de texto (.txt)
 const generateDownloadableFile = (data, type) => {
@@ -272,11 +298,21 @@ const renderChart = (data, type) => {
     const sendToAPI = async (type, params, results) => {
         try {
             const formData = new FormData();
-    
+      
+            // Agregar los datos básicos al FormData
             formData.append('distribucion', type);
             formData.append('parametros', JSON.stringify(params));
             formData.append('resultados', JSON.stringify(results));
-    
+      
+            // Agregar userId si existe
+            if (userId) {
+                formData.append('id_usuario', userId);
+                console.log('Se incluyó id_usuario en el FormData:', userId);
+            } else {
+                formData.append('id_usuario', null);
+                console.warn('id_usuario no disponible, se envía como null.');
+            }
+      
             // Convertir canvas a Blob y agregar al FormData
             if (canvas) {
                 const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/jpeg', 0.8));
@@ -289,28 +325,29 @@ const renderChart = (data, type) => {
             } else {
                 console.warn('Canvas no disponible, no se enviará el gráfico.');
             }
-    
+      
             // Inspeccionar contenido del FormData
             for (const [key, value] of formData.entries()) {
                 console.log(`${key}:`, value);
             }
-    
+      
+            // Enviar los datos a la API
             const response = await fetch('http://localhost:3002/generador/crear', {
                 method: 'POST',
                 body: formData,
             });
-    
+      
             if (!response.ok) {
                 const errorMessage = await response.text();
                 throw new Error(`Error al guardar en la base de datos: ${response.status} - ${errorMessage}`);
             }
-    
+      
             console.log('Generación guardada exitosamente en la base de datos.');
         } catch (error) {
             console.error('Error al guardar en la base de datos:', error.message);
             alert(`Error al guardar en la base de datos: ${error.message}`);
         }
-    };     
+    };    
     
     // Manejo del formulario para distribuciones continuas
     document.getElementById('continuous-form').addEventListener('submit', async (e) => {
