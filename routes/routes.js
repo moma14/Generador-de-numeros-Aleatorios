@@ -99,8 +99,9 @@ router.get('/registro', (req, res) => {
 router.post('/registro', async (req, res) => {
   const { nombres, apellido_paterno, apellido_materno, email, telefono, usuario, contrasenia } = req.body;
 
+  console.log('Datos recibidos en el registro:', { nombres, apellido_paterno, apellido_materno, email, telefono, usuario });
+
   try {
-    // Enviar solicitud a la API para registrar un nuevo usuario
     const response = await axios.post(`${API_URL}/usuarios`, {
       nombres,
       apellido_paterno,
@@ -111,12 +112,18 @@ router.post('/registro', async (req, res) => {
       contrasenia,
     });
 
+    console.log('Respuesta de la API al registrar usuario:', response.data);
+
     // Redirigir a la página de login con un mensaje de éxito
     res.render('login', { mensaje: 'Registro exitoso. Ahora puedes iniciar sesión.' });
   } catch (error) {
-    console.error('Error al registrar usuario:', error.message);
+    console.error('Error al registrar usuario:');
+    if (error.response) {
+      console.error('Error de la API:', error.response.data);
+    } else {
+      console.error('Error de conexión:', error.message);
+    }
 
-    // Mostrar el error en la vista de registro
     res.render('registro', {
       mensaje: null,
       error: error.response?.data?.error || 'Error al registrar usuario',
