@@ -14,6 +14,109 @@ document.addEventListener('DOMContentLoaded', () => {
     const userId = document.body.dataset.userId || null; // Recuperar el userId desde el atributo data-user-id de body
     const authButton = document.querySelector('.auth-button');  
 
+    const validateInputs = (type, params) => {
+        let isValid = true;
+        let errorMsg = '';
+
+        switch (type) {
+            case 'uniform':
+                if (params.min >= params.max) {
+                    isValid = false;
+                    errorMsg = 'El mínimo debe ser menor que el máximo.';
+                }
+                break;
+            case 'normal':
+                if (params.stddev <= 0) {
+                    isValid = false;
+                    errorMsg = 'La desviación estándar debe ser mayor que 0.';
+                }
+                break;
+            case 'exponential':
+                if (params.lambda <= 0) {
+                    isValid = false;
+                    errorMsg = 'Lambda debe ser mayor que 0.';
+                }
+                break;
+            case 'gamma':
+                if (params.shape <= 0 || params.scale <= 0) {
+                    isValid = false;
+                    errorMsg = 'Los parámetros de forma y escala deben ser mayores que 0.';
+                }
+                break;
+            case 'beta':
+                if (params.alpha <= 0 || params.beta <= 0) {
+                    isValid = false;
+                    errorMsg = 'Los parámetros α y β deben ser mayores que 0.';
+                }
+                break;
+            case 'weibull':
+                if (params.shape <= 0 || params.scale <= 0) {
+                    isValid = false;
+                    errorMsg = 'Los parámetros de forma y escala deben ser mayores que 0.';
+                }
+                break;
+            case 'cauchy':
+                if (params.scale <= 0) {
+                    isValid = false;
+                    errorMsg = 'El parámetro de escala debe ser mayor que 0.';
+                }
+                break;
+            case 'triangular':
+                if (params.min >= params.mode || params.mode >= params.max) {
+                    isValid = false;
+                    errorMsg = 'El mínimo debe ser menor que la moda y la moda menor que el máximo.';
+                }
+                break;
+            case 'binomial':
+                if (params.n <= 0 || params.p < 0 || params.p > 1) {
+                    isValid = false;
+                    errorMsg = 'n debe ser mayor que 0 y p debe estar entre 0 y 1.';
+                }
+                break;
+            case 'poisson':
+                if (params.lambda <= 0) {
+                    isValid = false;
+                    errorMsg = 'Lambda debe ser mayor que 0.';
+                }
+                break;
+            case 'geometric':
+                if (params.p <= 0 || params.p > 1) {
+                    isValid = false;
+                    errorMsg = 'La probabilidad de éxito (p) debe estar entre 0 y 1.';
+                }
+                break;
+            case 'hypergeometric':
+                if (
+                    params.population <= 0 ||
+                    params.samples <= 0 ||
+                    params.successes < 0 ||
+                    params.samples > params.population ||
+                    params.successes > params.population
+                ) {
+                    isValid = false;
+                    errorMsg = 'Los valores deben ser consistentes con la población, muestra y éxitos.';
+                }
+                break;
+            case 'multinomial':
+                const probs = params.probs.split(',').map(Number);
+                const sum = probs.reduce((acc, val) => acc + val, 0);
+                if (sum !== 1 || probs.some((p) => p < 0 || p > 1)) {
+                    isValid = false;
+                    errorMsg = 'Las probabilidades deben sumar 1 y cada una debe estar entre 0 y 1.';
+                }
+                break;
+            default:
+                errorMsg = 'Distribución no válida.';
+                isValid = false;
+        }
+
+        if (!isValid) {
+            notyf.error(errorMsg);
+        }
+
+        return isValid;
+    };
+
     console.log('userId en el cliente:', document.body.dataset.userId);    
     if (userId && userId !== '') {
         // Si hay un usuario logueado, mostrar "Logout"
@@ -365,6 +468,10 @@ const renderChart = (data, type) => {
             }
             numericParams[key] = parsedValue;
         }
+
+        if (!validateInputs(type, params)) {
+            return; // Detener si la validación falla
+        }
     
         // Construye el payload
         const payload = { type, params: numericParams };
@@ -421,6 +528,11 @@ const renderChart = (data, type) => {
         for (const key in params) {
             params[key] = isNaN(params[key]) ? params[key] : parseFloat(params[key]);
         }
+        
+        if (!validateInputs(type, params)) {
+            return; // Detener si la validación falla
+        }
+    
     
         try {
             const response = await fetch('/discrete', {
