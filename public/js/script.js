@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 break;
             case 'exponential':
-                if (params.lambda <= 0) {
+                 if (params.lambda <= 0) {
                     isValid = false;
                     errorMsg = 'Lambda debe ser mayor que 0.';
                 }
@@ -470,7 +470,7 @@ const renderChart = (data, type) => {
         }
 
         if (!validateInputs(type, params)) {
-            return; // Detener si la validación falla
+            return; // Si falla la validación, no continúa.
         }
     
         // Construye el payload

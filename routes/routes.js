@@ -9,6 +9,7 @@ const binomialController = require('../controllers/BinomialController');
 const indexGenerateController = require('../controllers/indexGenerate');
 const { renderIndex, handleContinuous, handleDiscrete } = require('../controllers/indexGenerate');
 const { handleExponential } = require('../controllers/ExponencialController');
+const verifyToken = require('../Middlewares/authMidleware');
 
 // URL base de la API
 const API_URL = 'http://localhost:3002'; // Asegúrate de que esta URL sea la correcta para tu API
@@ -180,22 +181,36 @@ router.post('/subir-grafico', async (req, res) => {
   }
 });
 
-// Ruta para obtener y mostrar el historial de un usuario
 router.get('/usuario/:id_usuario', async (req, res) => {
   try {
     const { id_usuario } = req.params;
 
+    console.log('Entrando a la ruta /usuario/:id_usuario'); // Log para verificar que la ruta se ejecuta
+
+    // Verifica que el token existe en la sesión
+    const token = req.session.token;
+    console.log('Token enviado desde la sesión:', token); // Log para verificar el token
+
+    if (!token) {
+      return res.status(401).render('error', { message: 'No tienes autorización para acceder a esta página.' });
+    }
+
     // Consultar generaciones del usuario
-    const response = await axios.get(`${API_URL}/generador/usuario/${id_usuario}`);
+    const response = await axios.get(`${API_URL}/generador/usuario/${id_usuario}`, {
+      headers: { Authorization: `Bearer ${token}` }, // Enviar el token en los encabezados
+    });
+
+    console.log('Respuesta de la API:', response.data); // Log para verificar la respuesta de la API
+
     const generaciones = response.data;
 
     // Renderizar la vista del historial
     res.render('historial', { generaciones });
   } catch (error) {
-    console.error('Error al obtener el historial:', error.message);
+    console.error('Error al obtener el historial:', error.response?.data || error.message);
     res.status(500).render('error', { message: 'No se pudo obtener el historial del usuario' });
   }
-});
+  });
 
 // Ruta para descargar archivo desde la API
 router.get('/descargar/:id_generacion', async (req, res) => {

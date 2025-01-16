@@ -26,7 +26,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Middleware para propagar la sesión a las vistas
 app.use((req, res, next) => {
+  console.log('Datos de la sesión: (Nuevo mensaje)', { userId: req.session.userId, token: req.session.token });
   res.locals.userId = req.session.userId || null; // Propaga el userId si está en la sesión
+  res.locals.token = req.session.token || null; // Propaga el token si está en la sesión
   next();
 });
 

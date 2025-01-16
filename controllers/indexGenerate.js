@@ -1,6 +1,7 @@
 const generateBernoulli = require('../models/Discretas.js/Bernoulli');
 const generateNormal = require('../models/Continuas/Normal');
 const generatePoisson = require('../models/Discretas.js/Poisson');
+const generateExponential = require('../models/Continuas/Exponencial');
 // Nuevas 
 const generateWeibull = require('../models/Continuas/Weibull');
 const generateGamma = require('../models/Continuas/Gamma');
@@ -63,6 +64,26 @@ const handleContinuous = (req, res) => {
             });
             return res.json({ results });
         }
+
+        if (normalizedType === 'exponential') {
+            console.log('Tipo normalizado:', normalizedType);
+            const lambda = parseFloat(params.lambda);
+            const count = parseInt(params.count, 10);
+        
+            // Validación de parámetros
+            if (isNaN(lambda) || isNaN(count) || lambda <= 0 || count <= 0) {
+                return res.status(400).json({ error: 'Parámetros inválidos para distribución exponencial.' });
+            }
+        
+            try {
+                // Generar los números aleatorios usando la función
+                const results = generateExponential(lambda, count);
+                return res.json({ results });
+            } catch (error) {
+                console.error('Error generando la distribución exponencial:', error.message);
+                return res.status(500).json({ error: 'Error interno al generar la distribución exponencial.' });
+            }
+        }        
 
         if (normalizedType === 'gamma') {
             console.log('Tipo normalizado:', normalizedType);
