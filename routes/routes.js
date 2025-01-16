@@ -197,23 +197,25 @@ router.get('/usuario/:id_usuario', async (req, res) => {
   }
 });
 
-router.get('/descargar/:archivo', async (req, res) => {
-  const { archivo } = req.params;
+// Ruta para descargar archivo desde la API
+router.get('/descargar/:id_generacion', async (req, res) => {
+  const { id_generacion } = req.params;
 
   try {
-    // Consultar el archivo desde la base de datos o almacenamiento
-    const query = 'SELECT archivo_descarga FROM generaciones WHERE archivo_descarga = ?';
-    const [result] = await db.query(query, [archivo]);
+    // Realizar solicitud a la API para obtener el archivo
+    const response = await axios.get(`http://localhost:3002/generador/descargar/${id_generacion}`, {
+      responseType: 'arraybuffer', // Necesario para manejar datos binarios
+    });
 
-    if (result.length === 0) {
-      return res.status(404).send('Archivo no encontrado');
-    }
+    // Configurar encabezados para la descarga
+    res.setHeader('Content-Disposition', `attachment; filename="resultados_${id_generacion}.txt"`);
+    res.setHeader('Content-Type', response.headers['content-type'] || 'application/octet-stream');
 
-    const filePath = `./uploads/${archivo}`; // Ruta donde guardas tus archivos
-    res.download(filePath);
+    // Enviar el contenido del archivo al cliente
+    res.send(response.data);
   } catch (error) {
-    console.error('Error al descargar archivo:', error.message);
-    res.status(500).send('Error al descargar archivo');
+    console.error('Error al manejar la descarga desde la API:', error.message);
+    res.status(500).send('Error al descargar el archivo');
   }
 });
 

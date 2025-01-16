@@ -3,6 +3,7 @@ html
   head
     title Generador de Números Aleatorios
     link(rel="stylesheet", href="/css/styles.css")
+    link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf/notyf.min.css")
   body(data-user-id=`${userId || ''}` data-token=`${token || ''}`)
     nav
       if userId
@@ -114,5 +115,6 @@ html
           div#chart-container(style="width: 80%; margin: auto;")
             canvas#distribution-chart(width="400" height="200")
 
+    script(src="https://cdn.jsdelivr.net/npm/notyf/notyf.min.js")
     script(src="https://cdn.jsdelivr.net/npm/chart.js")
     script(src="/js/script.js")

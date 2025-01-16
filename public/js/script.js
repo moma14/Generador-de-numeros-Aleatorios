@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
+
+    const notyf = new Notyf();
+    
     const continuousSelect = document.getElementById('continuous-type');
     const continuousParams = document.getElementById('continuous-params');
     const discreteSelect = document.getElementById('discrete-type');
@@ -357,7 +360,7 @@ const renderChart = (data, type) => {
             const parsedValue = parseFloat(params[key]);
             if (isNaN(parsedValue)) {
                 console.error(`Error: El parámetro "${key}" tiene un valor inválido: ${params[key]}`);
-                alert(`El parámetro "${key}" debe ser un número.`);
+                notyf.error(`El parámetro "${key}" debe ser un número.`); // Mostrar notificación de error
                 return;
             }
             numericParams[key] = parsedValue;
@@ -398,7 +401,7 @@ const renderChart = (data, type) => {
         await sendToAPI(type, numericParams, data.results);
         } catch (error) {
             console.error('Error durante la solicitud:', error);
-            alert(`Error: ${error.message}`);
+            notyf.error(`Error: ${error.message}`); // Mostrar notificación de error
         }
     });
     
@@ -442,7 +445,7 @@ const renderChart = (data, type) => {
         // Enviar los resultados a la API
         await sendToAPI(type, params, data.results);
         } catch (error) {
-            alert(`Error: ${error.message}`);
+            notyf.error(`Error: ${error.message}`); // Mostrar notificación de error
         }
     });    
 });
