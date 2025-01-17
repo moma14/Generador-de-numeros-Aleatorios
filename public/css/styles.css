@@ -277,6 +277,73 @@ button:hover {
   border-color: #fff;
   background: rgba(255, 255, 255, 0.15);
 }
+/*historial*/
+.responsive-table {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.responsive-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.responsive-table th,
+.responsive-table td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+.responsive-table th {
+  background-color: #95A5A6;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.responsive-table td {
+  background-color: #ffffff;
+  box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.1);
+}
+
+@media all and (max-width: 767px) {
+  .responsive-table table {
+    display: block;
+    width: 100%;
+  }
+
+  .responsive-table th,
+  .responsive-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .responsive-table th {
+    text-align: right;
+    padding-right: 10px;
+  }
+
+  .responsive-table td {
+    padding-left: 50%;
+    text-align: left;
+  }
+
+  .responsive-table td:before {
+    content: attr(data-label);
+    font-weight: bold;
+    color: #6C7A89;
+    display: block;
+    padding-right: 10px;
+  }
+
+  /* Ajustar las imágenes dentro de las celdas */
+  .responsive-table img {
+    width: 100%;
+    height: auto;
+  }
+}
 
 
 /*# sourceMappingURL=styles.css.map */
