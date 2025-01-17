@@ -6,6 +6,8 @@
 }
 body{
   background: grey;
+  margin: 0; /* Elimina cualquier margen del body */
+  padding: 0; /* Elimina cualquier padding del body */
 }
 body form {
   margin-bottom: 2rem;
@@ -33,6 +35,167 @@ body #results ul li {
 h1{
   display: flex;
   justify-content: center;
+}
+/*diseño navbar*/
+.auth-button {
+  margin: 0 8px;
+  text-decoration: none;
+  font-size: 18px;
+  color: #31344b;
+  font-weight: 400;
+  display: inline-flex;
+  padding: 10px 12px;
+  box-shadow: -3px -3px 7px #ffffff,
+              3px 3px 5px #ceced1;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.auth-button:hover {
+  color: #3498db;
+}
+
+.auth-button:hover:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset -3px -3px 7px #ffffff,
+              inset 3px 3px 5px #ceced1;
+}
+
+span {
+  font-size: 18px;
+  color: #31344b;
+  margin: 0 8px;
+  font-weight: 400;
+}
+nav{
+  width: 100%;
+  padding: 12px 0;
+  background: #ecf0f3;
+  box-shadow: -3px -3px 7px #ffffff,
+             3px 3px 5px #ceced1,
+             inset -3px -3px 7px #ffffff,
+             inset 3px 3px 5px #ceced1;
+   top: 0; 
+}
+nav .menu{
+  max-width: 1270px;
+  margin: auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.menu .logo a{
+  font-size: 28px;
+  font-weight: 600;
+  text-decoration: none;
+  color: #31344b;
+}
+.menu ul{
+  list-style: none;
+  display: flex;
+}
+.menu ul a{
+  margin:0 8px;
+  text-decoration: none;
+  font-size: 18px;
+  color: #31344b;
+  font-weight: 400;
+  display: inline-flex;
+  padding: 10px 12px;
+ box-shadow: -3px -3px 7px #ffffff,
+            3px 3px 5px #ceced1;
+  position: relative;
+  transition: all 0.3s ease;
+}
+.menu ul a:hover:before{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: inset -3px -3px 7px #ffffff,
+              inset 3px 3px 5px #ceced1;
+}
+.center{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+.upper{
+  font-size: 40px;
+  font-weight: 600;
+  color: #31344b;
+}
+.lower{
+  font-size: 40px;
+  font-weight: 600;
+  color: #31344b;
+}
+.menu ul a:hover{
+  color: #3498db;
+}
+nav label.btn{
+  color: #31344b;
+  font-size: 18px;
+  cursor: pointer;
+  display: none;
+}
+nav label.cancel{
+  position: absolute;
+  top: 25px;
+  right: 30px;
+}
+#check{
+  display: none;
+}
+@media (max-width:940px) {
+  .menu ul{
+    display: block;
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    max-width: 400px;
+    padding-top: 45px;
+    height: 100%;
+    background: #ecf0f3;
+    box-shadow: 0 5px 10px #b0b0b5;
+    z-index: 12;
+    transition: all 0.3s ease;
+  }
+  .menu ul a{
+   display: block;
+   font-size: 23px;
+   width: 100%;
+   margin-top: 30px;
+   box-shadow: none;
+   text-align: center;
+  }
+  .menu ul a:hover:before{
+    box-shadow: none;
+  }
+  nav label.bars{
+    display: block;
+  }
+  #check:checked ~ label.bars{
+    display: none;
+  }
+  #check:checked ~ ul label.cancel{
+    display: block;
+  }
+  #check:checked ~ ul{
+    left: 0;
+  }
 }
 /*diseño del index*/
 .container {
@@ -277,35 +440,71 @@ button:hover {
   border-color: #fff;
   background: rgba(255, 255, 255, 0.15);
 }
-/*historial*/
+
+/* Historial de Generaciones - Responsivo y Moderno */
+
 .responsive-table {
   width: 100%;
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+  -webkit-overflow-scrolling: touch; /* Para un scroll suave en móviles */
+  margin: 20px 0; /* Espaciado adicional */
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .responsive-table table {
   width: 100%;
   border-collapse: collapse;
+  font-size: 14px;
+}
+
+.responsive-table thead {
+  background: #2c3e50;
+  color: #ffffff;
+  text-transform: uppercase;
+  font-weight: bold;
 }
 
 .responsive-table th,
 .responsive-table td {
-  padding: 12px;
+  padding: 12px 15px;
   text-align: left;
   border: 1px solid #ddd;
 }
 
 .responsive-table th {
-  background-color: #95A5A6;
-  font-size: 14px;
-  text-transform: uppercase;
   letter-spacing: 0.03em;
+  font-size: 12px;
 }
 
 .responsive-table td {
   background-color: #ffffff;
-  box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.1);
+  color: #2c3e50;
+}
+
+.responsive-table tbody tr:nth-child(even) {
+  background-color: #f7f9fa; /* Color alternado */
+}
+
+.responsive-table img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.responsive-table a {
+  color: #3498db;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.responsive-table a:hover {
+  text-decoration: underline;
+}
+
+.responsive-table span {
+  font-size: 13px;
+  color: #7f8c8d;
 }
 
 @media all and (max-width: 767px) {
@@ -314,36 +513,41 @@ button:hover {
     width: 100%;
   }
 
-  .responsive-table th,
-  .responsive-table td {
+  .responsive-table thead {
+    display: none; /* Ocultar encabezados en móviles */
+  }
+
+  .responsive-table tr {
     display: block;
-    width: 100%;
-  }
-
-  .responsive-table th {
-    text-align: right;
-    padding-right: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 10px;
   }
 
   .responsive-table td {
-    padding-left: 50%;
-    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 10px;
+    font-size: 14px;
+    border: none;
+    border-bottom: 1px solid #eee;
+  }
+
+  .responsive-table td:last-child {
+    border-bottom: none;
   }
 
   .responsive-table td:before {
-    content: attr(data-label);
+    content: attr(data-label); /* Muestra el encabezado en móviles */
     font-weight: bold;
-    color: #6C7A89;
-    display: block;
-    padding-right: 10px;
-  }
-
-  /* Ajustar las imágenes dentro de las celdas */
-  .responsive-table img {
-    width: 100%;
-    height: auto;
+    color: #2c3e50;
+    text-transform: uppercase;
+    flex-shrink: 0;
+    margin-right: 10px;
+    font-size: 12px;
   }
 }
-
-
 /*# sourceMappingURL=styles.css.map */

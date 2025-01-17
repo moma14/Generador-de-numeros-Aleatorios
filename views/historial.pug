@@ -20,35 +20,33 @@ html
           tbody
             each generacion in generaciones
               tr
-                td
+                td(data-label="Fecha y Hora")
                   // Convertir la fecha a zona horaria de México
                   span #{new Date(generacion.fecha_hora).toLocaleString('es-MX', { timeZone: 'America/Mexico_City' })}
-                td= generacion.distribucion
-                td
-                  // Mostrar parámetros como una lista
+                td(data-label="Distribución")= generacion.distribucion
+                td(data-label="Parámetros")
                   ul
                     if generacion.parametros
                       each value, key in generacion.parametros
                         li #{key}: #{value}
                     else
                       li No disponible
-                td
-                  // Mostrar resultados como una lista
+                td(data-label="Resultados")
                   ul
                     if generacion.resultados
                       each value, key in generacion.resultados
                         li #{key}: #{value}
                     else
                       li No disponible
-                td
+                td(data-label="Gráfica")
                   if generacion.grafica
                     img(src=`data:image/png;base64,${generacion.grafica}` alt="Gráfica")
                   else
                     span No disponible
-                td 
+                td(data-label="Descargar")
                   if generacion.archivo_descarga
                     a(href=`/descargar/${generacion.id_generacion}`) Descargar
                   else
                     span No disponible
     else
-      p No hay generaciones registradas.
+      p No hay generaciones registradas

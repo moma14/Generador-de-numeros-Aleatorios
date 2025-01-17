@@ -6,15 +6,22 @@ html
     link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf/notyf.min.css")
   body(data-user-id=`${userId || ''}` data-token=`${token || ''}`)
     nav
-      if userId
-        span Bienvenido, #{userName}!
-        a(href="/logout" class="auth-button") Logout
-        a(href=`/usuario/${userId}` class="auth-button") Historial
-      else
-        span Bienvenido a esta aplicación, para guardar tus generaciones, inicia sesión.
-        a(href="/login" class="auth-button") Login
-
-    h1 Generador de Números Aleatorios
+      .menu
+        .logo
+          a(href="/")  Generador de Números Aleatorios
+        ul
+          if userId
+            li
+              span Bienvenido, #{userName}!
+            li
+              a(href="/logout" class="auth-button") Logout
+            li
+              a(href=`/usuario/${userId}` class="auth-button") Historial
+          else
+            li
+              span Bienvenido a esta aplicación, para guardar tus generaciones, inicia sesión.
+            li
+              a(href="/login" class="auth-button") Login
 
     //- Distribuciones continuas
     .gradient-cards
