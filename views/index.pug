@@ -42,6 +42,7 @@ html
           form#continuous-form(action="/continuous" method="post")
             label.card-title(for="continuous-type") Distribución continua:
             select#continuous-type(name="type")
+              option(value="" disabled selected) Selecciona una distribución
               option(value="uniform") Uniforme
               option(value="normal") Normal (Gaussiana)
               option(value="exponential") Exponencial
@@ -71,6 +72,7 @@ html
           form#discrete-form(action="/discrete" method="post")
             label.card-title(for="discrete-type") Distribución discreta:
             select#discrete-type(name="type")
+              option(value="" disabled selected) Selecciona una distribución
               option(value="binomial") Binomial
               option(value="bernoulli") Bernoulli
               option(value="poisson") Poisson
