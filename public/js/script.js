@@ -105,6 +105,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     errorMsg = 'Las probabilidades deben sumar 1 y cada una debe estar entre 0 y 1.';
                 }
                 break;
+            case 'log-normal':
+                if (params.mean <= 0 || params.stddev <= 0) {
+                    isValid = false;
+                    errorMsg = 'El parámetro de media debe ser mayor que 0 y la desviación estándar debe ser mayor que 0.';
+                }
+                break;   
+            case 'bernoulli':
+                if (params.p < 0 || params.p > 1) {
+                    isValid = false;
+                    errorMsg = 'La probabilidad de éxito (p) debe estar entre 0 y 1.';
+                }
+                break; 
             default:
                 errorMsg = 'Distribución no válida.';
                 isValid = false;
