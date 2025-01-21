@@ -9,7 +9,7 @@ html
     .login-body
       .wrapper
         form(action="/login" method="post")
-          h2 Login
+          h2 Iniciar Sesión
           if error
             p.error #{error} <!-- Muestra el error si existe -->
           .input-field
@@ -18,8 +18,8 @@ html
           .input-field
             input(type='password' name='password' required='')
             label Enter your password
-          button(type='submit') Log In
+          button(type='submit') Ingresar 
           .register
             p
               | Don&apos;t have an account? 
-              a(href='/registro') Register
+              a(href='/registro') Registro

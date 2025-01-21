@@ -34,6 +34,7 @@ body #results ul li {
 }
 h1{
   display: flex;
+  color: white;
   justify-content: center;
 }
 /*diseño navbar*/
@@ -68,19 +69,15 @@ h1{
 
 span {
   font-size: 18px;
-  color: #31344b;
+  color: #fff;
   margin: 0 8px;
   font-weight: 400;
 }
 nav{
   width: 100%;
   padding: 12px 0;
-  background: #ecf0f3;
-  box-shadow: -3px -3px 7px #ffffff,
-             3px 3px 5px #ceced1,
-             inset -3px -3px 7px #ffffff,
-             inset 3px 3px 5px #ceced1;
-   top: 0; 
+  background: #43474d;
+  top: 0; 
 }
 nav .menu{
   max-width: 1270px;
@@ -94,7 +91,7 @@ nav .menu{
   font-size: 28px;
   font-weight: 600;
   text-decoration: none;
-  color: #31344b;
+  color: #fff;
 }
 .menu ul{
   list-style: none;
@@ -104,18 +101,20 @@ nav .menu{
   margin:0 8px;
   text-decoration: none;
   font-size: 18px;
-  color: #31344b;
+  color: white;
   font-weight: 400;
   display: inline-flex;
   padding: 10px 12px;
  box-shadow: -3px -3px 7px #ffffff,
             3px 3px 5px #ceced1;
+            
   position: relative;
   transition: all 0.3s ease;
 }
 .menu ul a:hover:before{
   content: '';
   position: absolute;
+  color: white;
   top: 0;
   left: 0;
   right: 0;
@@ -238,7 +237,7 @@ nav label.cancel{
 }
 .gradient-cards {
   display: grid;
-  background: grey;
+  background: #64686d;
   grid-template-columns: repeat(2, 1fr);
   gap: 32px;
   padding: 30px;
@@ -316,7 +315,7 @@ nav label.cancel{
   position: absolute;
   width: 100%;
   height: 100%;
-  background: url(/images/background.avif);
+  background: #767a7e;
   background-size: cover;
 }
 /*diseño del registro*/
@@ -333,7 +332,7 @@ nav label.cancel{
   position: absolute;
   width: 100%;
   height: 100%;
-  background: url(/images/background.avif);
+  background: #767a7e;
   background-size: cover;
 }
 
@@ -342,9 +341,10 @@ nav label.cancel{
   border-radius: 8px;
   padding: 30px;
   text-align: center;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.781);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  background:#2c3e50;
 }
 
 form {
@@ -360,7 +360,7 @@ h2 {
 
 .input-field {
   position: relative;
-  border-bottom: 2px solid #ccc;
+  border-bottom: 2px solid #fff;
   margin: 15px 0;
 }
 
