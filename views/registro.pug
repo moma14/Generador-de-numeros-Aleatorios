@@ -4,31 +4,31 @@ html
     title Registro de Usuario
     link(rel="stylesheet" href="/css/styles.css")
   body
-    .register-body
+    .login-body
       .wrapper
         form#registroForm(action="/registro" method="POST")
           h2 Registro
           .input-field
-            label(for="nombres") Nombres:
             input(type="text" name="nombres" id="nombres" required)
+            label(for="nombres") Nombres:
           .input-field
-              label(for="apellido_paterno") Apellido Paterno:
-              input(type="text" name="apellido_paterno" id="apellido_paterno" required)
+            input(type="text" name="apellido_paterno" id="apellido_paterno" required)
+            label(for="apellido_paterno") Apellido Paterno:
           .input-field
-              label(for="apellido_materno") Apellido Materno:
-              input(type="text" name="apellido_materno" id="apellido_materno")
+            input(type="text" name="apellido_materno" id="apellido_materno" required)
+            label(for="apellido_materno") Apellido Materno:
           .input-field
-              label(for="telefono") Teléfono:
-              input(type="text" name="telefono" id="telefono" required)
+            input(type="text" name="telefono" id="telefono" required)
+            label(for="telefono") Teléfono:
           .input-field
-              label(for="email") Correo Electrónico:
-              input(type="email" name="email" id="email" required)
+            input(type="email" name="email" id="email" required)
+            label(for="email") Correo Electrónico:
           .input-field
-              label(for="usuario") Nombre de Usuario:
-              input(type="text" name="usuario" id="usuario" required)
+            input(type="text" name="usuario" id="usuario" required) 
+            label(for="usuario") Nombre de Usuario:
           .input-field
-              label(for="contrasenia") Contraseña:
-              input(type="password" name="contrasenia" id="contrasenia" required)
+            input(type="password" name="contrasenia" id="contrasenia" required)
+            label(for="contrasenia") Contraseña:
           button(type="submit") Registrar
 
       if mensaje
