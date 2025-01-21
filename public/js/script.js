@@ -253,83 +253,83 @@ const renderChart = (data, type) => {
         if (selected === 'uniform') {
             continuousParams.innerHTML = `
                 <label for="min-uniform">Mínimo:</label>
-                <input id="min-uniform" name="min" type="number" step="0.01" required />
+                <input id="min-uniform" name="min" type="number" step="0.01" value="0.9" required />
                 <label for="max-uniform">Máximo:</label>
-                <input id="max-uniform" name="max" type="number" step="0.01" required />
+                <input id="max-uniform" name="max" type="number" step="0.01" value="1" required />
                 <label for="count-uniform">Cantidad:</label>
-                <input id="count-uniform" name="count" type="number" min="1" required />
+                <input id="count-uniform" name="count" type="number" min="1" value="1" required />
             `;
         } else if (selected === 'normal') {
             continuousParams.innerHTML = `
                 <label for="mean-normal">Media (\u03bc):</label>
-                <input id="mean-normal" name="mean" type="number" step="0.01" required />
+                <input id="mean-normal" name="mean" type="number" step="0.01" value="0.5" required />
                 <label for="stddev-normal">Desviación estándar (\u03c3):</label>
-                <input id="stddev-normal" name="stddev" type="number" step="0.01" min="0" required />
+                <input id="stddev-normal" name="stddev" type="number" step="0.01" min="0" value="0.3" required />
                 <label for="count-normal">Cantidad:</label>
-                <input id="count-normal" name="count" type="number" min="1" required />
+                <input id="count-normal" name="count" type="number" min="1" value="1"  required />
             `;
         } else if (selected === 'exponential') {
             continuousParams.innerHTML = `
                 <label for="lambda-exponential">Lambda (λ):</label>
-                <input id="lambda-exponential" name="lambda" type="number" step="0.01" min="0.01" required />
+                <input id="lambda-exponential" name="lambda" type="number" step="0.01" min="0.01" value="0.1"  required />
                 <label for="count-exponential">Cantidad:</label>
-                <input id="count-exponential" name="count" type="number" min="1" required />
+                <input id="count-exponential" name="count" type="number" min="1" value="1" required />
             `;
         } else if (selected === 'gamma') {
             continuousParams.innerHTML = `
                 <label for="shape-gamma">Forma (α):</label>
-                <input id="shape-gamma" name="shape" type="number" step="0.01" min="0.01" required />
+                <input id="shape-gamma" name="shape" type="number" step="0.01" min="0.01" value="0.5"  required />
                 <label for="scale-gamma">Escala (β):</label>
-                <input id="scale-gamma" name="scale" type="number" step="0.01" min="0.01" required />
+                <input id="scale-gamma" name="scale" type="number" step="0.01" min="0.01" value="0.3"  required />
                 <label for="count-gamma">Cantidad:</label>
-                <input id="count-gamma" name="count" type="number" min="1" required />
+                <input id="count-gamma" name="count" type="number" min="1" value="1"  required />
             `;
         } else if (selected === 'beta') {
             continuousParams.innerHTML = `
                 <label for="alpha-beta">α:</label>
-                <input id="alpha-beta" name="alpha" type="number" step="0.01" min="0.01" required />
+                <input id="alpha-beta" name="alpha" type="number" step="0.01" min="0.01"  value="0.2"   required />
                 <label for="beta-beta">β:</label>
-                <input id="beta-beta" name="beta" type="number" step="0.01" min="0.01" required />
+                <input id="beta-beta" name="beta" type="number" step="0.01" min="0.01"  value="0.6" required />
                 <label for="count-beta">Cantidad:</label>
-                <input id="count-beta" name="count" type="number" min="1" required />
+                <input id="count-beta" name="count" type="number" min="1"  value="1"  required />
             `;
         } else if (selected === 'log-normal') {
             continuousParams.innerHTML = `
                 <label for="mean-lognormal">Media logarítmica:</label>
-                <input id="mean-lognormal" name="mean" type="number" step="0.01" required />
+                <input id="mean-lognormal" name="mean" type="number" step="0.01"  value="0.9"  required />
                 <label for="stddev-lognormal">Desviación estándar logarítmica:</label>
-                <input id="stddev-lognormal" name="stddev" type="number" step="0.01" min="0" required />
+                <input id="stddev-lognormal" name="stddev" type="number" step="0.01" min="0"  value="0.1"  required />
                 <label for="count-lognormal">Cantidad:</label>
-                <input id="count-lognormal" name="count" type="number" min="1" required />
+                <input id="count-lognormal" name="count" type="number" min="1"  value="1" required />
             `;
         } else if (selected === 'weibull') {
             continuousParams.innerHTML = `
                 <label for="shape-weibull">Forma (k):</label>
-                <input id="shape-weibull" name="shape" type="number" step="0.01" min="0.01" required />
+                <input id="shape-weibull" name="shape" type="number" step="0.01" min="0.01"  value="0.3"  required />
                 <label for="scale-weibull">Escala (λ):</label>
-                <input id="scale-weibull" name="scale" type="number" step="0.01" min="0.01" required />
+                <input id="scale-weibull" name="scale" type="number" step="0.01" min="0.01"  value="0.2" required />
                 <label for="count-weibull">Cantidad:</label>
-                <input id="count-weibull" name="count" type="number" min="1" required />
+                <input id="count-weibull" name="count" type="number" min="1"  value="1" required />
             `;
         } else if (selected === 'cauchy') {
             continuousParams.innerHTML = `
                 <label for="location-cauchy">Ubicación (x₀):</label>
-                <input id="location-cauchy" name="location" type="number" step="0.01" required />
+                <input id="location-cauchy" name="location" type="number" step="0.01" value="0.6"  required />
                 <label for="scale-cauchy">Escala (γ):</label>
-                <input id="scale-cauchy" name="scale" type="number" step="0.01" min="0.01" required />
+                <input id="scale-cauchy" name="scale" type="number" step="0.01" min="0.01"  value="0.1"  required />
                 <label for="count-cauchy">Cantidad:</label>
-                <input id="count-cauchy" name="count" type="number" min="1" required />
+                <input id="count-cauchy" name="count" type="number" min="1" value="1"  required />
             `;
         } else if (selected === 'triangular') {
             continuousParams.innerHTML = `
                 <label for="min-triangular">Mínimo:</label>
-                <input id="min-triangular" name="min" type="number" step="0.01" required />
+                <input id="min-triangular" name="min" type="number" step="0.01"  value="0.7" required />
                 <label for="mode-triangular">Moda:</label>
-                <input id="mode-triangular" name="mode" type="number" step="0.01" required />
+                <input id="mode-triangular" name="mode" type="number" step="0.01"  value="1"  required />
                 <label for="max-triangular">Máximo:</label>
-                <input id="max-triangular" name="max" type="number" step="0.01" required />
+                <input id="max-triangular" name="max" type="number" step="0.01"  value="3"  required />
                 <label for="count-triangular">Cantidad:</label>
-                <input id="count-triangular" name="count" type="number" min="1" required />
+                <input id="count-triangular" name="count" type="number" min="1"  value="1" required />
             `;
         } else {
             continuousParams.innerHTML = `<p>Distribución seleccionada no soportada.</p>`;
@@ -343,52 +343,52 @@ const renderChart = (data, type) => {
         if (selected === 'binomial') {
             discreteParams.innerHTML = `
                 <label for="n-binomial">Número de ensayos (n):</label>
-                <input id="n-binomial" name="n" type="number" min="1" required />
+                <input id="n-binomial" name="n" type="number" min="1" value="7"  required />
                 <label for="p-binomial">Probabilidad de éxito (p):</label>
-                <input id="p-binomial" name="p" type="number" step="0.01" min="0" max="1" required />
+                <input id="p-binomial" name="p" type="number" step="0.01" min="0" value="0.5"  max="1" required />
                 <label for="count-binomial">Cantidad:</label>
-                <input id="count-binomial" name="count" type="number" min="1" required />
+                <input id="count-binomial" name="count" type="number" min="1"  value="1"  required />
             `;
         } else if (selected === 'bernoulli') {
             discreteParams.innerHTML = `
                 <label for="p-bernoulli">Probabilidad de éxito (p):</label>
-                <input id="p-bernoulli" name="p" type="number" step="0.01" min="0" max="1" required />
+                <input id="p-bernoulli" name="p" type="number" step="0.01" min="0" max="1" value="0.69"  required />
                 <label for="count-bernoulli">Cantidad:</label>
-                <input id="count-bernoulli" name="count" type="number" min="1" required />
+                <input id="count-bernoulli" name="count" type="number" min="1"  value="2" required />
             `;
         } else if (selected === 'poisson') {
             discreteParams.innerHTML = `
                 <label for="lambda-poisson">Lambda (λ):</label>
-                <input id="lambda-poisson" name="lambda" type="number" step="0.01" min="0.01" required />
+                <input id="lambda-poisson" name="lambda" type="number" step="0.01" min="0.01"  value="0.5" required />
                 <label for="count-poisson">Cantidad:</label>
-                <input id="count-poisson" name="count" type="number" min="1" required />
+                <input id="count-poisson" name="count" type="number" min="1"  value="5"  required />
             `;
         } else if (selected === 'geometric') {
             discreteParams.innerHTML = `
                 <label for="p-geometric">Probabilidad de éxito (p):</label>
-                <input id="p-geometric" name="p" type="number" step="0.01" min="0" max="1" required />
+                <input id="p-geometric" name="p" type="number" step="0.01" min="0" max="1"  value="0.5" required />
                 <label for="count-geometric">Cantidad:</label>
-                <input id="count-geometric" name="count" type="number" min="1" required />
+                <input id="count-geometric" name="count" type="number" min="1"  value="5" required />
             `;
         } else if (selected === 'hypergeometric') {
             discreteParams.innerHTML = `
                 <label for="population-hypergeometric">Tamaño de la población:</label>
-                <input id="population-hypergeometric" name="population" type="number" min="1" required />
+                <input id="population-hypergeometric" name="population" type="number" min="1" value="12"  required />
                 <label for="successes-hypergeometric">Número de éxitos en la población:</label>
-                <input id="successes-hypergeometric" name="successes" type="number" min="0" required />
+                <input id="successes-hypergeometric" name="successes" type="number" min="0"  value="8"  required />
                 <label for="samples-hypergeometric">Tamaño de la muestra:</label>
-                <input id="samples-hypergeometric" name="samples" type="number" min="1" required />
+                <input id="samples-hypergeometric" name="samples" type="number" min="1"  value="6"  required />
                 <label for="count-hypergeometric">Cantidad:</label>
-                <input id="count-hypergeometric" name="count" type="number" min="1" required />
+                <input id="count-hypergeometric" name="count" type="number" min="1"  value="5"  required />
             `;
         } else if (selected === 'multinomial') {
             discreteParams.innerHTML = `
                 <label for="n-multinomial">Número de ensayos (n):</label>
-                <input id="n-multinomial" name="n" type="number" min="1" required />
+                <input id="n-multinomial" name="n" type="number" min="1"  value="9" required />
                 <label for="probs-multinomial">Probabilidades (separadas por comas):</label>
-                <input id="probs-multinomial" name="probs" type="text" placeholder="e.g., 0.2,0.3,0.5" required />
+                <input id="probs-multinomial" name="probs" type="text" value="0.2,0.3,0.5" required />
                 <label for="count-multinomial">Cantidad:</label>
-                <input id="count-multinomial" name="count" type="number" min="1" required />
+                <input id="count-multinomial" name="count" type="number" min="1" value="6" required />
             `;
         } else {
             discreteParams.innerHTML = `<p>Distribución seleccionada no soportada.</p>`;
